@@ -340,9 +340,9 @@ function recommend(e,last,dl){
   (d.steps>0?", Ziel "+e.low+"–"+e.high+" Wiederholungen":"")+"."}}
 
 /* ================= Speicher ================= */
-var LS_DATA="s3n-training-v1",LS_GIST="s3n-gist-v1";
+var LS_DATA="s3n-training-v1",LS_GIST="s3n-sync-v2";
 var state={currentWeek:32,sessions:{}};
-var gist={token:"",id:"",user:""};
+var gist={token:"",owner:"",repo:"",sha:""};
 var ui={day:1,drafts:{},cue:null,sheet:null,sync:{s:"idle",msg:"Nicht verbunden"}};
 var timer=null,tick=null,buzzed=false;
 
@@ -361,40 +361,56 @@ function scheduleSync(){
  clearTimeout(syncTimer);
  syncTimer=setTimeout(pushGist,2500);}
 
-function gistBody(){
- return JSON.stringify({description:"Trainingslog W31–42",public:true,
-  files:{"training.json":{content:JSON.stringify({updated:new Date().toISOString(),
-   currentWeek:state.currentWeek,sessions:state.sessions},null,1)}}})}
+function ready(){return !!(gist.token&&gist.owner&&gist.repo)}
+function apiUrl(){return "https://api.github.com/repos/"+gist.owner+"/"+gist.repo+"/contents/training.json"}
+function hdr(){return{"Authorization":"Bearer "+gist.token,"Accept":"application/vnd.github+json",
+ "X-GitHub-Api-Version":"2022-11-28"}}
+function b64(s){return btoa(unescape(encodeURIComponent(s)))}
+function unb64(b){return decodeURIComponent(escape(atob(String(b).replace(/\s/g,""))))}
+
+function payload(){
+ return JSON.stringify({updated:new Date().toISOString(),currentWeek:state.currentWeek,
+  sessions:state.sessions},null,1)}
+
+/* Vor jedem Schreiben die aktuelle Version holen — sonst lehnt GitHub ab,
+   wenn die Datei von einem anderen Gerät aus geändert wurde. */
+function fetchSha(){
+ return fetch(apiUrl(),{headers:hdr()})
+  .then(function(r){return r.ok?r.json():null})
+  .then(function(j){return j?j.sha:null})
+  .catch(function(){return null})}
 
 function pushGist(){
- if(!gist.token){setSync("idle","Nicht verbunden");return Promise.resolve(false)}
+ if(!ready()){setSync("idle","Sync nicht eingerichtet");return Promise.resolve(false)}
  setSync("busy","Wird hochgeladen…");
- var url="https://api.github.com/gists"+(gist.id?"/"+gist.id:"");
- return fetch(url,{method:gist.id?"PATCH":"POST",
-  headers:{"Authorization":"Bearer "+gist.token,"Accept":"application/vnd.github+json"},
-  body:gistBody()})
- .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
- .then(function(j){gist.id=j.id;gist.user=(j.owner&&j.owner.login)||gist.user;saveGistCfg();
-  var t=new Date();setSync("ok","Hochgeladen "+String(t.getHours()).padStart(2,"0")+":"+
-   String(t.getMinutes()).padStart(2,"0"));return true})
+ return fetchSha().then(function(sha){
+  var body={message:"Trainingslog "+new Date().toISOString(),content:b64(payload())};
+  if(sha)body.sha=sha;
+  return fetch(apiUrl(),{method:"PUT",headers:hdr(),body:JSON.stringify(body)})})
+ .then(function(r){if(!r.ok)return r.text().then(function(t){
+   throw new Error("HTTP "+r.status+" "+t.slice(0,90))});return r.json()})
+ .then(function(j){
+  gist.sha=(j.content&&j.content.sha)||"";saveGistCfg();
+  var t=new Date();
+  setSync("ok","Hochgeladen "+String(t.getHours()).padStart(2,"0")+":"+
+   String(t.getMinutes()).padStart(2,"0"));
+  return true})
  .catch(function(e){setSync("err","Upload fehlgeschlagen: "+e.message);return false})}
 
 function pullGist(){
- if(!gist.token||!gist.id){setSync("err","Kein Gist hinterlegt");return}
+ if(!ready()){setSync("err","Sync nicht eingerichtet");return}
  setSync("busy","Wird geladen…");
- fetch("https://api.github.com/gists/"+gist.id,
-  {headers:{"Authorization":"Bearer "+gist.token,"Accept":"application/vnd.github+json"}})
+ fetch(apiUrl(),{headers:hdr()})
  .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
  .then(function(j){
-  var f=j.files&&j.files["training.json"];if(!f)throw new Error("Datei fehlt");
-  var d=JSON.parse(f.content);
+  var d=JSON.parse(unb64(j.content));
   state.sessions=d.sessions||{};if(d.currentWeek)state.currentWeek=d.currentWeek;
-  saveLocal();setSync("ok","Geladen");render()})
+  gist.sha=j.sha||"";saveGistCfg();saveLocal();setSync("ok","Geladen");render()})
  .catch(function(e){setSync("err","Laden fehlgeschlagen: "+e.message)})}
 
 function rawUrl(){
- if(!gist.id)return "";
- return "https://gist.githubusercontent.com/"+(gist.user||"anonymous")+"/"+gist.id+"/raw/training.json"}
+ if(!gist.owner||!gist.repo)return "";
+ return "https://"+gist.owner+".github.io/"+gist.repo+"/training.json"}
 
 /* ================= Export / Import ================= */
 function buildExport(){
@@ -632,21 +648,23 @@ function openSheet(kind){
   host.innerHTML=h;return}
  if(kind==="sync"){
   h='<div class="sheet" data-a="closesheet"><div class="sheet-in" data-stop="1">'+
-   '<div class="eyebrow">GitHub-Gist Synchronisation</div>'+
-   '<span class="sheet-lbl">Token (nur Gist-Berechtigung)</span>'+
-   '<input id="gtok" type="password" value="'+esc(gist.token)+'" placeholder="ghp_…">'+
-   '<span class="sheet-lbl">Gist-ID (leer lassen für neu)</span>'+
-   '<input id="gid" value="'+esc(gist.id)+'" placeholder="wird automatisch gefüllt">'+
-   (gist.id?'<span class="sheet-lbl">Adresse für Claude</span>'+
-    '<textarea class="sheet-tx" style="min-height:60px" readonly>'+esc(rawUrl())+'</textarea>':"")+
+   '<div class="eyebrow">Synchronisation</div>'+
+   '<span class="sheet-lbl">GitHub-Benutzername</span>'+
+   '<input id="gown" value="'+esc(gist.owner)+'" placeholder="tims1008" autocapitalize="off">'+
+   '<span class="sheet-lbl">Repository</span>'+
+   '<input id="grep" value="'+esc(gist.repo)+'" placeholder="training" autocapitalize="off">'+
+   '<span class="sheet-lbl">Token (nur dieses Repository, Contents: Read and write)</span>'+
+   '<input id="gtok" type="password" value="'+esc(gist.token)+'" placeholder="github_pat_…">'+
+   (rawUrl()?'<span class="sheet-lbl">Adresse für Claude</span>'+
+    '<textarea class="sheet-tx" style="min-height:56px" readonly>'+esc(rawUrl())+'</textarea>':"")+
    '<div class="status" id="shst">'+esc(ui.sync.msg)+'</div>'+
    '<div class="btnrow" style="margin-top:10px">'+
    '<button class="ghost" data-a="gsave">Speichern &amp; hochladen</button>'+
-   '<button class="ghost" data-a="gpull">Vom Gist laden</button>'+
+   '<button class="ghost" data-a="gpull">Herunterladen</button>'+
    '<button class="ghost" data-a="closesheet">Schließen</button></div>'+
-   '<p class="help" style="margin-top:12px;font-size:12px">Der Token bleibt nur auf diesem Gerät. '+
-   'Erstell ihn auf GitHub unter Settings → Developer settings → Tokens mit ausschließlich der '+
-   'Gist-Berechtigung.</p></div></div>';
+   '<p class="help" style="margin-top:12px;font-size:12px">Der Token bleibt nur auf diesem Gerät '+
+   'und wird nie mit hochgeladen. Nach dem Hochladen dauert es etwa eine Minute, bis die Adresse '+
+   'oben die neuen Daten zeigt.</p></div></div>';
   host.innerHTML=h;return}
  host.innerHTML=""}
 
@@ -722,7 +740,8 @@ document.addEventListener("click",function(ev){
 
  if(a==="gsave"){
   gist.token=document.getElementById("gtok").value.trim();
-  gist.id=document.getElementById("gid").value.trim();
+  gist.owner=document.getElementById("gown").value.trim();
+  gist.repo=document.getElementById("grep").value.trim().replace(/^\/|\/$/g,"");
   saveGistCfg();
   pushGist().then(function(ok){
    var st2=document.getElementById("shst");if(st2)st2.textContent=ui.sync.msg;
@@ -754,10 +773,10 @@ document.addEventListener("input",function(ev){
 /* ================= Start ================= */
 loadLocal();
 try{localStorage.setItem("s3n-probe","1");localStorage.removeItem("s3n-probe");
- setSync(gist.token?"idle":"idle",gist.token?"Verbunden — noch nicht hochgeladen":"Speicher aktiv · Sync nicht eingerichtet")}
+ setSync("idle",ready()?"Verbunden":"Speicher aktiv · Sync nicht eingerichtet")}
 catch(e){setSync("err","Kein lokaler Speicher — bitte nicht im privaten Modus öffnen")}
 render();
-if(gist.token&&gist.id)pullGist();
+if(ready())pullGist();
 </script>
 </body>
 </html>
