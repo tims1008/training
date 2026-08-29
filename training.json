@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-29T07:18:45.407Z",
+ "updated": "2026-08-29T07:19:14.942Z",
  "currentWeek": 32,
  "sessions": {
   "32:2": {
@@ -195,6 +195,13 @@
    "note": "Chest Press 20kg pro Seite, Seitheben mit Kurzhanteln statt Maschine",
    "back": "ok",
    "date": "2026-08-28"
+  },
+  "32:4": {
+   "entries": {},
+   "rpe": {},
+   "note": "",
+   "back": "ausstrahlung",
+   "date": "2026-08-29"
   }
  }
 }
