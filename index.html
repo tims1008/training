@@ -388,7 +388,11 @@ function pushGist(){
   if(sha)body.sha=sha;
   return fetch(apiUrl(),{method:"PUT",headers:hdr(),body:JSON.stringify(body)})})
  .then(function(r){if(!r.ok)return r.text().then(function(t){
-   throw new Error("HTTP "+r.status+" "+t.slice(0,90))});return r.json()})
+   var hint=r.status===401?"Token wird nicht akzeptiert":
+    r.status===403?"Berechtigung fehlt — Contents muss auf Read and write stehen":
+    r.status===404?"Repository nicht gefunden oder Token nicht dafür freigegeben":
+    r.status===422?"GitHub hat die Datei abgelehnt":"Fehler "+r.status;
+   throw new Error(hint)});return r.json()})
  .then(function(j){
   gist.sha=(j.content&&j.content.sha)||"";saveGistCfg();
   var t=new Date();
@@ -650,11 +654,14 @@ function openSheet(kind){
   h='<div class="sheet" data-a="closesheet"><div class="sheet-in" data-stop="1">'+
    '<div class="eyebrow">Synchronisation</div>'+
    '<span class="sheet-lbl">GitHub-Benutzername</span>'+
-   '<input id="gown" value="'+esc(gist.owner)+'" placeholder="tims1008" autocapitalize="off">'+
+   '<input id="gown" data-s="owner" value="'+esc(gist.owner)+'" placeholder="tims1008" '+
+    'autocapitalize="off" autocorrect="off" spellcheck="false">'+
    '<span class="sheet-lbl">Repository</span>'+
-   '<input id="grep" value="'+esc(gist.repo)+'" placeholder="training" autocapitalize="off">'+
+   '<input id="grep" data-s="repo" value="'+esc(gist.repo)+'" placeholder="training" '+
+    'autocapitalize="off" autocorrect="off" spellcheck="false">'+
    '<span class="sheet-lbl">Token (nur dieses Repository, Contents: Read and write)</span>'+
-   '<input id="gtok" type="password" value="'+esc(gist.token)+'" placeholder="github_pat_…">'+
+   '<input id="gtok" data-s="token" type="password" value="'+esc(gist.token)+'" '+
+    'placeholder="github_pat_…" autocapitalize="off" autocorrect="off" spellcheck="false">'+
    (rawUrl()?'<span class="sheet-lbl">Adresse für Claude</span>'+
     '<textarea class="sheet-tx" style="min-height:56px" readonly>'+esc(rawUrl())+'</textarea>':"")+
    '<div class="status" id="shst">'+esc(ui.sync.msg)+'</div>'+
@@ -739,10 +746,18 @@ document.addEventListener("click",function(ev){
   st.textContent=res.days+" Einheit(en) mit "+res.exercises+" Übungen eingelesen.";return}
 
  if(a==="gsave"){
-  gist.token=document.getElementById("gtok").value.trim();
-  gist.owner=document.getElementById("gown").value.trim();
-  gist.repo=document.getElementById("grep").value.trim().replace(/^\/|\/$/g,"");
+  var gv=function(id){var el=document.getElementById(id);
+   return el?String(el.value||"").trim():""};
+  var tok=gv("gtok")||gist.token,own=gv("gown")||gist.owner,rep=gv("grep")||gist.repo;
+  var miss=[];
+  if(!own)miss.push("Benutzername");
+  if(!rep)miss.push("Repository");
+  if(!tok)miss.push("Token");
+  var stx=document.getElementById("shst");
+  if(miss.length){if(stx)stx.textContent="Bitte noch ausfüllen: "+miss.join(", ");return}
+  gist.token=tok;gist.owner=own;gist.repo=rep.replace(/^\/|\/$/g,"");
   saveGistCfg();
+  if(stx)stx.textContent="Wird hochgeladen…";
   pushGist().then(function(ok){
    var st2=document.getElementById("shst");if(st2)st2.textContent=ui.sync.msg;
    if(ok)openSheet("sync")});
@@ -764,6 +779,10 @@ document.addEventListener("click",function(ev){
 
 document.addEventListener("input",function(ev){
  var el=ev.target;
+ var sf=el.getAttribute("data-s");
+ if(sf){gist[sf]=String(el.value||"").trim();
+  if(sf==="repo")gist.repo=gist.repo.replace(/^\/|\/$/g,"");
+  saveGistCfg();return}
  if(el.getAttribute("data-f")==="note"){
   var s=sess();state.sessions[sessKey()]=Object.assign({},s,{note:el.value,date:s.date||todayISO()});
   saveLocal();scheduleSync();return}
