@@ -124,6 +124,14 @@ body{margin:0;background:var(--iron);color:var(--chalk);font-family:var(--body);
 .warn{margin-top:9px;border-left:3px solid var(--ember);padding:10px 12px;background:rgba(191,66,39,.07);
  font-size:13px;line-height:1.55}
 
+.pushbtn{width:100%;padding:16px 12px;border:none;border-radius:3px;background:var(--brass);
+ color:#fffdf8;font-family:var(--disp);font-weight:700;font-size:17px;letter-spacing:.09em;
+ text-transform:uppercase;cursor:pointer}
+.pushbtn.clean{background:var(--cast);color:var(--dust);border:1px solid var(--rule)}
+.pushbtn:active{filter:brightness(.94)}
+.pushst{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--dust);
+ margin-top:8px;text-align:center;min-height:16px}
+
 .btnrow{display:flex;gap:7px;flex-wrap:wrap}
 .ghost{flex:1;min-width:130px;background:none;border:1px solid var(--rule);border-radius:2px;padding:12px 10px;
  color:var(--chalk);font-family:var(--disp);font-weight:600;font-size:14px;letter-spacing:.08em;
@@ -344,7 +352,7 @@ var LS_DATA="s3n-training-v1",LS_GIST="s3n-sync-v2";
 var state={currentWeek:32,sessions:{}};
 var gist={token:"",owner:"",repo:"",sha:""};
 var ui={day:1,drafts:{},cue:null,sheet:null,sync:{s:"idle",msg:"Nicht verbunden"}};
-var timer=null,tick=null,buzzed=false;
+var timer=null,tick=null,buzzed=false,dirty=false;
 
 function loadLocal(){
  try{var r=localStorage.getItem(LS_DATA);if(r)state=Object.assign(state,JSON.parse(r))}catch(e){}
@@ -357,7 +365,8 @@ function saveGistCfg(){try{localStorage.setItem(LS_GIST,JSON.stringify(gist))}ca
 var syncTimer=null;
 function setSync(s,msg){ui.sync={s:s,msg:msg};paintSync()}
 function scheduleSync(){
- if(!gist.token)return;
+ dirty=true;paintSync();
+ if(!ready())return;
  clearTimeout(syncTimer);
  syncTimer=setTimeout(pushGist,2500);}
 
@@ -394,7 +403,7 @@ function pushGist(){
     r.status===422?"GitHub hat die Datei abgelehnt":"Fehler "+r.status;
    throw new Error(hint)});return r.json()})
  .then(function(j){
-  gist.sha=(j.content&&j.content.sha)||"";saveGistCfg();
+  gist.sha=(j.content&&j.content.sha)||"";saveGistCfg();dirty=false;
   var t=new Date();
   setSync("ok","Hochgeladen "+String(t.getHours()).padStart(2,"0")+":"+
    String(t.getMinutes()).padStart(2,"0"));
@@ -581,6 +590,11 @@ function render(){
   '<textarea class="note" data-f="note" placeholder="Schlaf, Energie, was sich komisch angefühlt hat…">'+
   esc(s.note||"")+'</textarea></section>';
 
+ h+='<section class="sect">'+
+  '<button class="pushbtn'+(dirty?"":" clean")+'" id="pushbtn" data-a="pushnow">'+
+  (dirty?"Speichern &amp; hochladen":"Alles hochgeladen")+'</button>'+
+  '<div class="pushst" id="pushst">'+esc(ui.sync.msg)+'</div></section>';
+
  h+='<section class="sect"><div class="btnrow">'+
   '<button class="ghost" data-a="export">Exportieren</button>'+
   '<button class="ghost" data-a="import">Einlesen</button>'+
@@ -602,9 +616,12 @@ function render(){
 
 function paintSync(){
  var d=document.getElementById("sdot"),t=document.getElementById("stx");
- if(!d||!t)return;
- d.className="syncdot "+(ui.sync.s==="ok"?"ok":ui.sync.s==="err"?"err":ui.sync.s==="busy"?"busy":"");
- t.textContent=ui.sync.msg}
+ if(d)d.className="syncdot "+(ui.sync.s==="ok"?"ok":ui.sync.s==="err"?"err":ui.sync.s==="busy"?"busy":"");
+ if(t)t.textContent=ui.sync.msg;
+ var b=document.getElementById("pushbtn"),p=document.getElementById("pushst");
+ if(b){b.className="pushbtn"+(dirty?"":" clean");
+  b.textContent=dirty?"Speichern & hochladen":"Alles hochgeladen"}
+ if(p)p.textContent=ui.sync.msg}
 
 /* ================= Timer ================= */
 function paintTimer(){
@@ -727,6 +744,9 @@ document.addEventListener("click",function(ev){
   var val=t.getAttribute("data-v"),s4=sess();
   patchSession({back:s4.back===val?"":val});render();return}
 
+ if(a==="pushnow"){
+  if(!ready()){openSheet("sync");return}
+  pushGist();return}
  if(a==="export"){openSheet("export");return}
  if(a==="import"){openSheet("import");return}
  if(a==="sync-cfg"){openSheet("sync");return}
