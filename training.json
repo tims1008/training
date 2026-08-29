@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-29T11:57:26.815Z",
+ "updated": "2026-08-29T11:57:57.835Z",
  "currentWeek": 32,
  "sessions": {
   "32:2": {
@@ -283,7 +283,8 @@
     "d2": 9,
     "d1": 8,
     "d3": 8,
-    "d4": 8
+    "d4": 8,
+    "d6": 9
    },
    "note": "Pullover maschine durch cable pullover ersetzt",
    "back": "ok",
