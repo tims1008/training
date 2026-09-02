@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-02T14:27:56.245Z",
+ "updated": "2026-09-02T14:30:44.335Z",
  "currentWeek": 33,
  "sessions": {
   "32:2": {
@@ -304,10 +304,16 @@
      {
       "w": 30,
       "r": 10
+     },
+     {
+      "w": 30,
+      "r": 10
      }
     ]
    },
-   "rpe": {},
+   "rpe": {
+    "a1": 7
+   },
    "note": "Lat pulldown 30kg steckgewicht pro seite",
    "back": "",
    "date": "2026-09-02"
