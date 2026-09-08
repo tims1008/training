@@ -198,7 +198,7 @@ var PLAN={
   ex("a1","lat-wide","Lat Pulldown, weiter Griff",4,8,10,"8"),
   ex("a2","row-cs","Chest-Supported Row, neutral",3,10,12,"8",{cue:"Zug aus dem Ellenbogen. Oberkörper bleibt am Polster, kein Nachschwingen."}),
   ex("a3","sapd","Straight-Arm Pulldown",2,12,15,"8"),
-  ex("a4","rpd","Reverse Pec Deck",4,12,15,"8"),
+  ex("a4","rear-fly","Rear Delt Fly, Brust an Schrägbank",4,12,15,"8",{cue:"Bauch auf einer 30–45°-Schrägbank, Brust liegt auf. Arme hängen lassen, Ellenbogen leicht gebeugt, seitlich nach oben führen. Kein Schwung, Daumen zeigen nach unten."}),
   ex("a5","facepull","Face Pull",2,15,15,"7–8"),
   ex("a6","curl-mach","Maschinen-Bizepscurl",2,10,12,"8")]},
  {short:"Glutes",title:"Glutes + Beine",items:[
@@ -219,7 +219,7 @@ var PLAN={
   ex("d1","lat-neutral","Lat Pulldown, neutraler Griff",4,8,10,"8–9"),
   ex("d2","row-single","Einarmiges Kabelrudern",3,10,12,"8"),
   ex("d3","pullover","Pullover-Maschine",2,15,15,"8"),
-  ex("d4","reardelt","Rear Delt Maschine",3,15,15,"8"),
+  ex("d4","reardelt","Rear Delt Maschine oder Reverse Pec Deck",3,15,15,"8"),
   ex("d5","hipthrust","Hip Thrust Maschine",3,10,12,"8",{cue:"Kinn zur Brust, Rippen unten. Oben nicht überstrecken."}),
   ex("d6","hammer","Hammer Curl",2,10,12,"8")]}]},
 2:{label:"Arme + Schultern",weeks:[37,38,39,40,41,42],days:[
@@ -235,7 +235,7 @@ var PLAN={
   ex("f2","row-cs","Chest-Supported Row",3,10,12,"8"),
   ex("f3","incl-curl","Incline Dumbbell Curl",4,8,10,"8–9"),
   ex("f4","preacher","Preacher Curl Maschine",3,10,12,"8"),
-  ex("f5","rpd","Reverse Pec Deck",4,12,15,"8"),
+  ex("f5","rear-fly","Rear Delt Fly, Brust an Schrägbank",4,12,15,"8",{cue:"Bauch auf einer 30–45°-Schrägbank, Brust liegt auf. Arme hängen lassen, Ellenbogen leicht gebeugt, seitlich nach oben führen. Kein Schwung, Daumen zeigen nach unten."}),
   ex("f6","facepull","Face Pull",2,15,15,"7–8")]},
  {short:"Beine",title:"Beine + Glutes + zweiter Armreiz",items:[
   ex("g1","legpress","Beinpresse",4,8,10,"8",{cue:"Nur so tief, wie das Becken flach auf dem Sitz bleibt."}),
@@ -250,7 +250,7 @@ var PLAN={
   ex("h3","pushdown","Triceps Pushdown",3,8,10,"8–9"),
   ex("h4","hammer","Hammer Curl",3,10,12,"8"),
   ex("h5","oh-tri","Überkopf-Trizepsstrecken",3,10,12,"8"),
-  ex("h6","rpd","Reverse Pec Deck",3,15,15,"8"),
+  ex("h6","rear-fly","Rear Delt Fly, Brust an Schrägbank",3,15,15,"8",{cue:"Bauch auf einer 30–45°-Schrägbank, Brust liegt auf. Arme hängen lassen, Ellenbogen leicht gebeugt, seitlich nach oben führen. Kein Schwung, Daumen zeigen nach unten."}),
   ex("h7","chestpress","Machine Chest Press",3,10,10,"7")]}]}
 };
 
@@ -271,9 +271,9 @@ var WEEK_META={
 var REST={legpress:180,hipthrust:150,"lat-wide":150,"lat-neutral":150,chestpress:150,"ohp-db":150,
  "row-cs":120,"row-single":90,"incl-curl":90,legcurl:90,pecdeck:75,legext:75,calf:75,pullover:75,
  pushdown:75,"oh-tri":75,"rope-pd":75,"curl-mach":75,"cable-curl":75,preacher:75,hammer:75,
- latraise:60,rpd:60,reardelt:60,facepull:60,sapd:60,abduction:60};
+ latraise:60,"rear-fly":60,reardelt:60,facepull:60,sapd:60,abduction:60};
 var INC={legpress:5,hipthrust:5,"lat-wide":5,"lat-neutral":5,"row-cs":5,chestpress:5,pecdeck:5,
- abduction:5,calf:5,"incl-curl":2,hammer:2,"ohp-db":2};
+ abduction:5,calf:5,"incl-curl":2,hammer:2,"ohp-db":2,"rear-fly":2};
 function restFor(e){return REST[e.move]||90}
 function incFor(e){return INC[e.move]||2.5}
 function blockOf(w){return w<=36?1:2}
@@ -544,7 +544,7 @@ function render(){
    last.sets.map(function(x){return x.w===null?String(x.r):fmt(x.w)+"×"+x.r}).join("  ")+
    (last.rpe?"  · RPE "+last.rpe:"")+'</div>';
   if(e.cue)h+= ui.cue===e.id?'<div class="cue">'+esc(e.cue)+'</div>':
-   '<button class="cuebtn" data-a="cue" data-e="'+e.id+'">Rücken-Hinweis</button>';
+   '<button class="cuebtn" data-a="cue" data-e="'+e.id+'">Hinweis zur Ausführung</button>';
   if(rec&&logged.length<sets)h+='<div class="rec"><span class="rec-kg">'+esc(rec.kg)+'</span>'+
    '<span class="rec-tx">'+esc(rec.text)+'</span></div>';
 
@@ -576,15 +576,6 @@ function render(){
 
   if(v)h+='<div class="verdict '+v.kind+'">'+esc(v.text)+'</div>';
   h+='</section>'});
-
- h+='<section class="sect"><h3 class="sect-h">Rücken am nächsten Morgen</h3><div class="back">'+
-  [["ok","Unauffällig"],["steif","Steif, aber ok"],["ausstrahlung","Ausstrahlung ins Bein"]]
-  .map(function(p){return '<button class="backbtn'+(s.back===p[0]?" on":"")+
-   (p[0]==="ausstrahlung"?" warn":"")+'" data-a="back" data-v="'+p[0]+'">'+p[1]+'</button>'}).join("")+
-  '</div>';
- if(s.back==="ausstrahlung")h+='<div class="warn">Wenn das zweimal hintereinander nach derselben '+
-  'Übung auftritt: Übung raus und mit deinem Physiotherapeuten sprechen. Nicht vier Wochen abwarten.</div>';
- h+='</section>';
 
  h+='<section class="sect"><h3 class="sect-h">Notiz zur Einheit</h3>'+
   '<textarea class="note" data-f="note" placeholder="Schlaf, Energie, was sich komisch angefühlt hat…">'+
