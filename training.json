@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-21T11:49:17.000Z",
+ "updated": "2026-09-21T11:52:16.603Z",
  "currentWeek": 35,
  "sessions": {
   "32:2": {
@@ -1340,6 +1340,10 @@
      {
       "w": 20,
       "r": 10
+     },
+     {
+      "w": 20,
+      "r": 11
      }
     ]
    },
@@ -1347,7 +1351,8 @@
     "d2": 8,
     "d1": 8,
     "d3": 8,
-    "d6": 8
+    "d6": 8,
+    "d5": 9
    },
    "note": "Rear delt machine gegen rear delt auf schrägbank getauscht",
    "back": "",
