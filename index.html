@@ -100,6 +100,17 @@ body{margin:0;background:var(--iron);color:var(--chalk);font-family:var(--body);
 .add{height:46px;padding:0 15px;background:var(--brass);color:#fffdf8;border:none;border-radius:2px;
  font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 
+.altbtn{margin:7px 0 0 24px;background:none;border:none;padding:0;font-family:var(--mono);
+ font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);cursor:pointer}
+.altbadge{display:inline-block;margin-left:6px;padding:2px 6px;border-radius:2px;
+ background:rgba(46,95,208,.1);color:var(--cobalt);font-family:var(--mono);font-size:10px;
+ letter-spacing:.06em;text-transform:uppercase;vertical-align:middle}
+.altname{margin:6px 0 0 24px;font-size:13px;font-weight:600;color:var(--cobalt)}
+.altrow{display:block;width:100%;text-align:left;background:var(--cast);border:1px solid var(--rule);
+ border-radius:2px;padding:13px 12px;margin-bottom:6px;font-family:var(--body);font-size:14px;
+ color:var(--chalk);cursor:pointer}
+.altrow.on{border-color:var(--cobalt);color:var(--cobalt);font-weight:600}
+.altrow.plan{border-style:dashed}
 .rpe{margin:10px 0 0 24px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .rpe-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
 .rpe-b{min-width:36px;padding:7px 8px;background:var(--cast);border:1px solid var(--rule);border-radius:2px;
@@ -351,7 +362,7 @@ function recommend(e,last,dl){
 var LS_DATA="s3n-training-v1",LS_GIST="s3n-sync-v2";
 var state={currentWeek:32,sessions:{}};
 var gist={token:"",owner:"",repo:"",sha:""};
-var ui={day:1,drafts:{},cue:null,sheet:null,sync:{s:"idle",msg:"Nicht verbunden"}};
+var ui={day:1,drafts:{},cue:null,altFor:null,sheet:null,sync:{s:"idle",msg:"Nicht verbunden"}};
 var timer=null,tick=null,buzzed=false,dirty=false;
 
 function loadLocal(){
@@ -441,8 +452,9 @@ function buildExport(){
   day.items.forEach(function(e){
    var sets=s.entries[e.id];if(!sets||!sets.length)return;
    var txt=sets.map(function(x){return x.w===null?String(x.r):fmt(x.w)+"kg×"+x.r}).join(", ");
-   var rp=(s.rpe||{})[e.id];
-   out.push("  "+e.name.padEnd(34).slice(0,34)+" "+txt+(rp?"  · RPE "+rp:""))});
+   var rp=(s.rpe||{})[e.id],al=(s.alt||{})[e.id];
+   var label=al?e.name+" \u2192 "+al:e.name;
+   out.push("  "+(label.length>52?label:label.padEnd(52))+" "+txt+(rp?"  · RPE "+rp:""))});
   if(s.note)out.push("  Notiz: "+s.note);
   if(s.back)out.push("  Rücken am Folgetag: "+s.back)});
  return out.join("\n")}
@@ -456,17 +468,20 @@ function parseExport(text){
   if(h){var w=+h[1],d=+h[2];
    if(w<31||w>42||d<1||d>4){cur=null;return}
    key=w+":"+d;var dm=ln.match(/\[(\d{4}-\d{2}-\d{2})\]/);
-   cur={entries:{},rpe:{},note:"",back:"",date:dm?dm[1]:""};sessions[key]=cur;return}
+   cur={entries:{},rpe:{},alt:{},note:"",back:"",date:dm?dm[1]:""};sessions[key]=cur;return}
   if(!cur||!key)return;
   var no=ln.match(/^\s+Notiz:\s*(.*)$/);if(no){cur.note=no[1].trim();return}
   var ba=ln.match(/^\s+R[üu]cken am Folgetag:\s*(.*)$/i);if(ba){cur.back=ba[1].trim();return}
   var m=ln.match(setRe);if(!m)return;
   var p=key.split(":").map(Number),day=PLAN[blockOf(p[0])].days[p[1]-1];if(!day)return;
-  var nm=m[1].trim();
+  var nm=m[1].trim(),altName="";
+  var arrow=nm.split(/\s*(?:\u2192|->)\s*/);
+  if(arrow.length>1){nm=arrow[0].trim();altName=arrow.slice(1).join(" ").trim()}
   var item=day.items.filter(function(it){return it.name===nm})[0]||
    day.items.filter(function(it){return it.name.indexOf(nm.slice(0,18))===0||
     nm.indexOf(it.name.slice(0,18))===0})[0];
   if(!item)return;
+  if(altName)cur.alt[item.id]=altName;
   var kg=[],re=/(\d[\d.,]*)\s*kg\s*[×x]\s*(\d+)/gi,mm;
   while((mm=re.exec(m[2])))kg.push({w:num(mm[1]),r:parseInt(mm[2],10)});
   var arr=kg.length?kg:m[2].split(",").map(function(s){return parseInt(s.trim(),10)})
@@ -477,24 +492,62 @@ function parseExport(text){
   if(Object.keys(sessions[k].entries).length)used[k]=sessions[k]});
  return{sessions:used,exercises:n,days:Object.keys(used).length}}
 
+/* Sinnvolle Ersatzübungen, wenn das Gerät belegt ist.
+   Alle rückenschonend: Maschine, Kabel oder abgestützt. */
+var ALTS={
+ "lat-wide":["Lat Pulldown eng","Klimmzug an der Maschine","Einarmiger Latzug am Kabel"],
+ "lat-neutral":["Lat Pulldown weit","Klimmzug an der Maschine","Einarmiger Latzug am Kabel"],
+ "row-cs":["Maschinen-Rudern","Kabelrudern sitzend","Einarmiges Kabelrudern"],
+ "row-single":["Chest-Supported Row","Maschinen-Rudern","Kabelrudern sitzend"],
+ sapd:["Kabel-Pullover","Pullover-Maschine"],
+ pullover:["Straight-Arm Pulldown","Kabel-Pullover"],
+ "rear-fly":["Reverse Pec Deck","Rear Delt Maschine","Rear Delt Fly am Kabel"],
+ reardelt:["Rear Delt Fly an der Schrägbank","Reverse Pec Deck","Rear Delt Fly am Kabel"],
+ facepull:["Reverse Pec Deck","Rear Delt Fly am Kabel"],
+ "curl-mach":["Cable Curl","Preacher Curl Maschine","Incline Dumbbell Curl"],
+ "cable-curl":["Maschinen-Bizepscurl","Preacher Curl Maschine","Hammer Curl"],
+ preacher:["Maschinen-Bizepscurl","Cable Curl"],
+ "incl-curl":["Cable Curl","Maschinen-Bizepscurl","Hammer Curl"],
+ hammer:["Cable Curl mit Seil","Maschinen-Bizepscurl"],
+ pushdown:["Rope Pushdown","Trizepsmaschine","Überkopf-Trizepsstrecken"],
+ "rope-pd":["Triceps Pushdown","Trizepsmaschine"],
+ "oh-tri":["Triceps Pushdown","Trizepsmaschine"],
+ chestpress:["Brustpresse Schrägbank","Kurzhantel-Bankdrücken","Pec Deck"],
+ pecdeck:["Kabel-Fly","Machine Chest Press"],
+ "ohp-db":["Schulterpresse Maschine","Schulterdrücken am Kabel"],
+ latraise:["Machine Lateral Raise","Seitheben am Kabel"],
+ legpress:["Hackenschmidt-Maschine","Beinpresse liegend","Ausfallschritte mit Kurzhanteln"],
+ hipthrust:["Glute Bridge an der Multipresse","Kabel Pull-through","Glute-Kickback Maschine"],
+ legcurl:["Liegender Beinbeuger","Stehender Beinbeuger einbeinig"],
+ legext:["Beinpresse mit engem Stand","Sissy Squat"],
+ abduction:["Abduktion am Kabel","Abduktion mit Miniband"],
+ calf:["Wadenheben stehend","Wadenheben sitzend","Wadenpresse einbeinig"],
+};
+function altsFor(e){return ALTS[e.move]||[]}
+
 /* ================= Datenzugriff ================= */
 function sessKey(){return state.currentWeek+":"+ui.day}
-function sess(){return state.sessions[sessKey()]||{entries:{},rpe:{},note:"",back:""}}
+function sess(){return state.sessions[sessKey()]||{entries:{},rpe:{},alt:{},note:"",back:""}}
+function altOf(e){return (sess().alt||{})[e.id]||""}
 function patchSession(patch){
  var k=sessKey(),s=sess();
  state.sessions[k]=Object.assign({},s,patch,{date:s.date||todayISO()});
  saveLocal();scheduleSync()}
 
 function lastTime(e){
- var best=null,w0=state.currentWeek,d0=ui.day;
+ var best=null,w0=state.currentWeek,d0=ui.day,cur=altOf(e);
  Object.keys(state.sessions).forEach(function(k){
   var p=k.split(":").map(Number),w=p[0],d=p[1];
   if(w>w0||(w===w0&&d===d0))return;
   var day=PLAN[blockOf(w)].days[d-1];if(!day)return;
+  var S=state.sessions[k];
   day.items.forEach(function(it){
    if(it.move!==e.move)return;
-   var sets=state.sessions[k].entries[it.id];if(!sets||!sets.length)return;
-   if(!best||w>best.week)best={week:w,sets:sets,rpe:(state.sessions[k].rpe||{})[it.id]}})});
+   var sets=S.entries[it.id];if(!sets||!sets.length)return;
+   /* Nur vergleichen, was dieselbe Uebung war: Plan mit Plan,
+      Alternative mit derselben Alternative. */
+   if(((S.alt||{})[it.id]||"")!==cur)return;
+   if(!best||w>best.week)best={week:w,sets:sets,rpe:(S.rpe||{})[it.id]}})});
  return best}
 
 /* ================= Rendern ================= */
@@ -536,15 +589,20 @@ function render(){
   var wVal=d.w!==undefined?d.w:(recNum!==null?fmt(recNum):(ref&&ref.w!==null?fmt(ref.w):""));
   var rVal=d.r!==undefined?d.r:"";
 
+  var alt=(s.alt||{})[e.id]||"";
+
   h+='<section class="card">';
   h+='<div class="chead"><span class="idx">'+String(i+1).padStart(2,"0")+'</span>'+
-   '<span class="name">'+esc(e.name)+'</span>'+
+   '<span class="name">'+esc(e.name)+(alt?'<span class="altbadge">ersetzt</span>':"")+'</span>'+
    '<span class="target">'+esc(targetLine(e,sets))+'</span></div>';
+  if(alt)h+='<div class="altname">→ '+esc(alt)+'</div>';
   if(last)h+='<div class="last">Letztes Mal (W'+last.week+'): '+
    last.sets.map(function(x){return x.w===null?String(x.r):fmt(x.w)+"×"+x.r}).join("  ")+
    (last.rpe?"  · RPE "+last.rpe:"")+'</div>';
-  if(e.cue)h+= ui.cue===e.id?'<div class="cue">'+esc(e.cue)+'</div>':
+  if(e.cue&&!alt)h+= ui.cue===e.id?'<div class="cue">'+esc(e.cue)+'</div>':
    '<button class="cuebtn" data-a="cue" data-e="'+e.id+'">Hinweis zur Ausführung</button>';
+  h+='<button class="altbtn" data-a="altopen" data-e="'+e.id+'">'+
+   (alt?"Übung ändern":"Gerät belegt? Alternative wählen")+'</button>';
   if(rec&&logged.length<sets)h+='<div class="rec"><span class="rec-kg">'+esc(rec.kg)+'</span>'+
    '<span class="rec-tx">'+esc(rec.text)+'</span></div>';
 
@@ -658,6 +716,31 @@ function openSheet(kind){
    '<button class="ghost" data-a="runimport">Einlesen</button>'+
    '<button class="ghost" data-a="closesheet">Schließen</button></div></div></div>';
   host.innerHTML=h;return}
+ if(kind==="alt"){
+  var week=state.currentWeek,day=PLAN[blockOf(week)].days[ui.day-1];
+  var e=day.items.filter(function(x){return x.id===ui.altFor})[0];
+  if(!e){host.innerHTML="";return}
+  var cur=(sess().alt||{})[e.id]||"";
+  h='<div class="sheet" data-a="closesheet"><div class="sheet-in" data-stop="1">'+
+   '<div class="eyebrow">Statt '+esc(e.name)+'</div>'+
+   '<div style="margin:12px 0 4px">'+
+   '<button class="altrow plan'+(cur?"":" on")+'" data-a="altpick" data-v="">'+
+    esc(e.name)+' — geplante Übung</button>'+
+   altsFor(e).map(function(n){
+    return '<button class="altrow'+(cur===n?" on":"")+'" data-a="altpick" data-v="'+esc(n)+'">'+
+     esc(n)+'</button>'}).join("")+
+   '</div>'+
+   '<span class="sheet-lbl">Andere Übung</span>'+
+   '<input id="altfree" placeholder="Name eintippen" value="'+
+    (cur&&altsFor(e).indexOf(cur)<0?esc(cur):"")+'">'+
+   '<div class="status" id="shst"></div>'+
+   '<div class="btnrow" style="margin-top:10px">'+
+   '<button class="ghost" data-a="altfree">Übernehmen</button>'+
+   '<button class="ghost" data-a="closesheet">Schließen</button></div>'+
+   '<p class="help" style="margin-top:12px;font-size:12px">Die Alternative gilt nur für diese '+
+   'Einheit. Ihre Gewichte werden getrennt von der geplanten Übung geführt — beim nächsten Mal '+
+   'siehst du hier die Werte der Alternative, nicht die der Originalübung.</p></div></div>';
+  host.innerHTML=h;return}
  if(kind==="sync"){
   h='<div class="sheet" data-a="closesheet"><div class="sheet-in" data-stop="1">'+
    '<div class="eyebrow">Synchronisation</div>'+
@@ -738,6 +821,25 @@ document.addEventListener("click",function(ev){
  if(a==="pushnow"){
   if(!ready()){openSheet("sync");return}
   pushGist();return}
+ if(a==="altopen"){ui.altFor=t.getAttribute("data-e");openSheet("alt");return}
+
+ if(a==="altpick"||a==="altfree"){
+  var id=ui.altFor;if(!id){document.getElementById("sheethost").innerHTML="";return}
+  var name=a==="altpick"?t.getAttribute("data-v"):
+   String((document.getElementById("altfree")||{}).value||"").trim();
+  var S=sess(),had=(S.entries[id]||[]).length;
+  var prev=(S.alt||{})[id]||"";
+  if(name===prev){document.getElementById("sheethost").innerHTML="";return}
+  if(had&&!confirm("Für diese Übung sind schon "+had+" Satz/Sätze eingetragen. Beim Wechsel werden sie gelöscht, weil sie zur anderen Übung gehören. Fortfahren?")){return}
+  var al=Object.assign({},S.alt||{});
+  if(name)al[id]=name;else delete al[id];
+  var en=Object.assign({},S.entries),rp=Object.assign({},S.rpe||{});
+  delete en[id];delete rp[id];
+  patchSession({alt:al,entries:en,rpe:rp});
+  ui.drafts[id]=undefined;ui.altFor=null;
+  document.getElementById("sheethost").innerHTML="";
+  render();return}
+
  if(a==="export"){openSheet("export");return}
  if(a==="import"){openSheet("import");return}
  if(a==="sync-cfg"){openSheet("sync");return}
@@ -752,7 +854,8 @@ document.addEventListener("click",function(ev){
    var old=state.sessions[k]||{};
    state.sessions[k]=Object.assign({},old,res.sessions[k],
     {entries:Object.assign({},old.entries||{},res.sessions[k].entries),
-     rpe:Object.assign({},old.rpe||{},res.sessions[k].rpe)})});
+     rpe:Object.assign({},old.rpe||{},res.sessions[k].rpe),
+     alt:Object.assign({},old.alt||{},res.sessions[k].alt||{})})});
   saveLocal();scheduleSync();render();
   st.textContent=res.days+" Einheit(en) mit "+res.exercises+" Übungen eingelesen.";return}
 
