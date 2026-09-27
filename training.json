@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-27T06:50:10.598Z",
+ "updated": "2026-09-27T06:50:14.699Z",
  "currentWeek": 36,
  "sessions": {
   "32:2": {
@@ -1597,7 +1597,8 @@
    },
    "rpe": {
     "d1": 7,
-    "d2": 6
+    "d2": 6,
+    "d3": 7
    },
    "alt": {
     "d3": "Straight-Arm Pulldown"
