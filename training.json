@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-27T06:50:14.699Z",
+ "updated": "2026-09-27T06:50:32.684Z",
  "currentWeek": 36,
  "sessions": {
   "32:2": {
@@ -1601,7 +1601,8 @@
     "d3": 7
    },
    "alt": {
-    "d3": "Straight-Arm Pulldown"
+    "d3": "Straight-Arm Pulldown",
+    "d4": "Rear Delt Fly an der Schrägbank"
    },
    "note": "",
    "back": "",
