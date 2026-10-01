@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-01T08:54:43.141Z",
+ "updated": "2026-10-01T13:35:50.091Z",
  "currentWeek": 37,
  "sessions": {
   "32:2": {
@@ -1850,6 +1850,21 @@
    "note": "Chest supported row heute zuerst gemacht, dann lat pulldown al zweites",
    "back": "",
    "date": "2026-09-29"
+  },
+  "37:4": {
+   "entries": {
+    "h1": [
+     {
+      "w": 9,
+      "r": 15
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-10-01"
   }
  }
 }
