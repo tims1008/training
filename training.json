@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-12T06:26:06.377Z",
+ "updated": "2026-10-12T06:26:12.969Z",
  "currentWeek": 38,
  "sessions": {
   "32:2": {
@@ -2364,7 +2364,8 @@
     "g5": 8
    },
    "alt": {
-    "g1": "Beinpresse liegend"
+    "g1": "Beinpresse liegend",
+    "g6": "Triceps Pushdown"
    },
    "note": "",
    "back": "",
