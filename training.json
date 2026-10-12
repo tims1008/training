@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-12T06:18:23.531Z",
+ "updated": "2026-10-12T06:18:38.384Z",
  "currentWeek": 38,
  "sessions": {
   "32:2": {
@@ -2340,7 +2340,8 @@
     ]
    },
    "rpe": {
-    "g2": 8
+    "g2": 8,
+    "g1": 8
    },
    "alt": {
     "g1": "Beinpresse liegend"
