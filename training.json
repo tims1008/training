@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-14T13:47:50.724Z",
+ "updated": "2026-10-15T12:19:40.671Z",
  "currentWeek": 39,
  "sessions": {
   "32:2": {
@@ -2609,6 +2609,21 @@
    "note": "Einbruch beim incline dumbbell curl, weil ich die übung bisher nicht ganz richtig gemacht habe. Ich habe die arme immer leicht angewinkelt gelassen, statt sie gerade hängen zu lassen.\n\nLat pulldown habe ich auch verpasst, mit gewicht runzer zu gehen.\n\nEinbruch bei face pull",
    "back": "",
    "date": "2026-10-14"
+  },
+  "39:3": {
+   "entries": {
+    "g6": [
+     {
+      "w": 22.5,
+      "r": 12
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-10-15"
   }
  }
 }
