@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-19T10:46:36.682Z",
+ "updated": "2026-10-19T10:48:55.695Z",
  "currentWeek": 40,
  "sessions": {
   "32:2": {
@@ -2909,6 +2909,10 @@
      {
       "w": 30,
       "r": 10
+     },
+     {
+      "w": 30,
+      "r": 10
      }
     ]
    },
@@ -2916,7 +2920,8 @@
     "e1": 8,
     "e3": 8,
     "e4": 8,
-    "e6": 8
+    "e6": 8,
+    "e5": 7
    },
    "alt": {},
    "note": "Kurzhantelschultwrdrücken weiterhin im neutralen griff",
