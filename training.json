@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-22T09:23:38.320Z",
+ "updated": "2026-10-24T10:02:11.695Z",
  "currentWeek": 40,
  "sessions": {
   "32:2": {
@@ -3111,6 +3111,21 @@
    "note": "Statt seated leg curl habe ich rear kick gemacht",
    "back": "",
    "date": "2026-10-21"
+  },
+  "40:4": {
+   "entries": {
+    "h1": [
+     {
+      "w": 10,
+      "r": 15
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-10-24"
   }
  }
 }
