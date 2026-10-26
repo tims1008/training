@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-26T10:23:50.559Z",
+ "updated": "2026-10-26T10:24:39.838Z",
  "currentWeek": 41,
  "sessions": {
   "32:2": {
@@ -3291,13 +3291,18 @@
      {
       "w": 10,
       "r": 14
+     },
+     {
+      "w": 10,
+      "r": 14
      }
     ]
    },
    "rpe": {
     "e1": 9,
     "e2": 9,
-    "e3": 8
+    "e3": 8,
+    "e4": 8
    },
    "alt": {},
    "note": "Linke schulter zog etwas beim schulterdrücken",
