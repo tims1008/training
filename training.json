@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-27T10:46:12.033Z",
+ "updated": "2026-10-27T10:49:06.092Z",
  "currentWeek": 41,
  "sessions": {
   "32:2": {
@@ -3413,6 +3413,10 @@
      {
       "w": 60,
       "r": 8
+     },
+     {
+      "w": 60,
+      "r": 8
      }
     ]
    },
@@ -3420,7 +3424,8 @@
     "f2": 9,
     "f3": 9,
     "f5": 8,
-    "f4": 8
+    "f4": 8,
+    "f1": 9
    },
    "alt": {},
    "note": "Chest supported row vor lat pulldown gemacht",
