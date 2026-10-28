@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-27T10:54:24.854Z",
+ "updated": "2026-10-28T12:46:15.197Z",
  "currentWeek": 41,
  "sessions": {
   "32:2": {
@@ -3431,6 +3431,16 @@
    "note": "Chest supported row vor lat pulldown gemacht, face pull heute keine chance, gym super voll und nervig",
    "back": "",
    "date": "2026-10-27"
+  },
+  "41:3": {
+   "entries": {},
+   "rpe": {},
+   "alt": {
+    "g2": "Liegender Beinbeuger"
+   },
+   "note": "",
+   "back": "",
+   "date": "2026-10-28"
   }
  }
 }
