@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-28T12:46:15.197Z",
+ "updated": "2026-10-28T12:47:06.800Z",
  "currentWeek": 41,
  "sessions": {
   "32:2": {
@@ -3433,7 +3433,14 @@
    "date": "2026-10-27"
   },
   "41:3": {
-   "entries": {},
+   "entries": {
+    "g2": [
+     {
+      "w": 30,
+      "r": 10
+     }
+    ]
+   },
    "rpe": {},
    "alt": {
     "g2": "Liegender Beinbeuger"
