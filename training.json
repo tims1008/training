@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-28T13:27:51.743Z",
+ "updated": "2026-10-30T10:14:00.804Z",
  "currentWeek": 41,
  "sessions": {
   "32:2": {
@@ -3529,6 +3529,21 @@
    "note": "Beinpresse als vorletzte übung gemacht",
    "back": "",
    "date": "2026-10-28"
+  },
+  "41:4": {
+   "entries": {
+    "h1": [
+     {
+      "w": 10,
+      "r": 15
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-10-30"
   }
  }
 }
