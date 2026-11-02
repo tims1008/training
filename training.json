@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-31T08:13:52.452Z",
+ "updated": "2026-11-02T10:00:51.663Z",
  "currentWeek": 42,
  "sessions": {
   "32:2": {
@@ -3720,6 +3720,21 @@
    "note": "Keine schulterbeschwerden",
    "back": "",
    "date": "2026-10-31"
+  },
+  "42:2": {
+   "entries": {
+    "f2": [
+     {
+      "w": 18,
+      "r": 10
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-11-02"
   }
  }
 }
