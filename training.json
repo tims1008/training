@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-02T10:19:56.682Z",
+ "updated": "2026-11-02T10:27:18.610Z",
  "currentWeek": 42,
  "sessions": {
   "32:2": {
@@ -3777,7 +3777,9 @@
     "f5": 6,
     "f6": 6
    },
-   "alt": {},
+   "alt": {
+    "f4": "Maschinen-Bizepscurl"
+   },
    "note": "",
    "back": "",
    "date": "2026-11-02"
