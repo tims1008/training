@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-03T10:25:14.647Z",
+ "updated": "2026-11-03T10:26:50.507Z",
  "currentWeek": 42,
  "sessions": {
   "32:2": {
@@ -3825,7 +3825,9 @@
     "g6": 6,
     "g5": 7
    },
-   "alt": {},
+   "alt": {
+    "g2": "Liegender Beinbeuger"
+   },
    "note": "",
    "back": "",
    "date": "2026-11-03"
