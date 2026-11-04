@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#f4f6f9">
-<title>Trainingslog W31–42</title>
+<title>Trainingslog W31–48</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 :root{
@@ -262,7 +262,32 @@ var PLAN={
   ex("h4","hammer","Hammer Curl",3,10,12,"8"),
   ex("h5","oh-tri","Überkopf-Trizepsstrecken",3,10,12,"8"),
   ex("h6","rear-fly","Rear Delt Fly, Brust an Schrägbank",3,15,15,"8",{cue:"Bauch auf einer 30–45°-Schrägbank, Brust liegt auf. Arme hängen lassen, Ellenbogen leicht gebeugt, seitlich nach oben führen. Kein Schwung, Daumen zeigen nach unten."}),
-  ex("h7","chestpress","Machine Chest Press",3,10,10,"7")]}]}
+  ex("h7","chestpress","Machine Chest Press",3,10,10,"7")]}]},
+3:{label:"Erhalt",weeks:[43,44,45,46,47,48],days:[
+ {short:"Beine",title:"Beine",items:[
+  ex("i1","legpress","Beinpresse",3,8,12,"8",{cue:"Nur so tief, wie das Becken flach auf dem Sitz bleibt. Löst sich der untere Rücken, ist es zu tief."}),
+  ex("i2","legcurl-lying","Liegender Beinbeuger",3,8,12,"8"),
+  ex("i3","hipthrust","Hip Thrust Maschine",3,8,12,"8",{cue:"Kinn zur Brust, Rippen unten. Oben nicht überstrecken."}),
+  ex("i4","calf","Wadenpresse an der Beinpresse",3,10,15,"8",{cue:"Ballen an die untere Kante, Knie fast gestreckt, unten dehnen lassen."}),
+  ex("i5","legext","Beinstrecker (erst ab W45)",2,10,15,"8")]},
+ {short:"Drücken",title:"Brust, Schulter, Trizeps",items:[
+  ex("j1","ohp-db","Kurzhantel-Schulterdrücken sitzend",3,6,10,"8",{cue:"18 kg bis einschließlich W44. Erst nach zwei beschwerdefreien Wochen ein Versuch mit 20."}),
+  ex("j2","chestpress","Machine Chest Press",3,8,12,"8"),
+  ex("j3","pushdown","Triceps Pushdown",3,10,15,"8"),
+  ex("j4","latraise","Seitheben (Kurzhantel oder Maschine)",3,12,15,"8"),
+  ex("j5","oh-tri","Überkopf-Trizepsstrecken am Kabel",2,10,12,"8")]},
+ {short:"Ziehen",title:"Rücken, Bizeps, Rear Delts",items:[
+  ex("k1","lat-neutral","Lat Pulldown, neutraler Griff",3,8,12,"8"),
+  ex("k2","row-cs","Chest-Supported Row",3,8,12,"8"),
+  ex("k3","incl-curl","Incline Dumbbell Curl",3,8,12,"8"),
+  ex("k4","facepull","Face Pull",2,12,15,"8"),
+  ex("k5","rear-fly","Rear Delt Fly, Brust an Schrägbank",3,12,15,"8",{cue:"Bauch auf einer 30–45°-Schrägbank, Brust liegt auf. Arme hängen lassen, Ellenbogen leicht gebeugt, seitlich nach oben führen. Kein Schwung, Daumen zeigen nach unten."})]},
+ {short:"Arme",title:"Schulter und Arme",items:[
+  ex("l1","latraise","Seitheben (Kurzhantel oder Maschine)",3,12,15,"8"),
+  ex("l2","cable-curl","Cable Curl",3,8,12,"8"),
+  ex("l3","pushdown","Triceps Pushdown",3,8,12,"8"),
+  ex("l4","hammer","Hammer Curl",3,8,12,"8"),
+  ex("l5","oh-tri-db","Überkopf-Trizepsstrecken (nicht am Kabel)",2,10,12,"8")]}]}
 };
 
 var WEEK_META={
@@ -277,17 +302,23 @@ var WEEK_META={
 39:{phase:"Progression",rpe:"8",note:"Doppelte Progression. Bei Curls und Pushdowns reichen kleine Sprünge."},
 40:{phase:"Progression",rpe:"8",note:"Doppelte Progression. Ellenbogen bei Trizeps ruhig halten, sonst wandert die Arbeit in die Schulter."},
 41:{phase:"Zuspitzen",rpe:"8–9",note:"RPE 8–9 bei den ersten beiden Übungen jedes Tages. Der Rest bleibt bei 8."},
-42:{phase:"Deload",rpe:"6–7",note:"Sätze halbiert, Gewicht bleibt. Danach entscheiden wir anhand deiner Zahlen weiter.",deload:true}};
+42:{phase:"Deload",rpe:"6–7",note:"Sätze halbiert, Gewicht bleibt. Danach startet der Erhaltungsblock.",deload:true},
+43:{phase:"Erhalt",rpe:"8",note:"Neuer Block. Gewichte bleiben stehen, Volumen ist um 30 % gekürzt. Beine stehen jetzt auf Tag 1 — Beinpresse ganz vorne, alle drei Sätze einzeln eintragen."},
+44:{phase:"Erhalt",rpe:"8",note:"Halten ist das Ziel. Eine Woche ohne Steigerung ist in diesem Block ein Erfolg, kein Stillstand."},
+45:{phase:"Erhalt",rpe:"8",note:"Beinstrecker kommt dazu, 2 Sätze. Schulterdrücken darf auf 20 kg, wenn die letzten zwei Wochen beschwerdefrei waren."},
+46:{phase:"Erhalt",rpe:"8",note:"Sitzt eine Übung zwei Wochen in Folge am unteren Ende ihres Bereichs, geh eine Stufe runter und füll den Bereich."},
+47:{phase:"Erhalt",rpe:"8",note:"Warnsignal im Blick behalten: gleiches Gewicht, gleiches RPE, weniger Wiederholungen — zweimal in Folge bei derselben Übung."},
+48:{phase:"Erhalt",rpe:"8",note:"Letzte Woche im Defizit. Ab dem 21. Dezember drei Wochen Erhalt über die Feiertage, danach entscheiden wir neu."}};
 
 var REST={legpress:180,hipthrust:150,"lat-wide":150,"lat-neutral":150,chestpress:150,"ohp-db":150,
- "row-cs":120,"row-single":90,"incl-curl":90,legcurl:90,pecdeck:75,legext:75,calf:75,pullover:75,
- pushdown:75,"oh-tri":75,"rope-pd":75,"curl-mach":75,"cable-curl":75,preacher:75,hammer:75,
+ "row-cs":120,"legcurl-lying":90,"row-single":90,"incl-curl":90,legcurl:90,pecdeck:75,legext:75,calf:75,pullover:75,
+ pushdown:75,"oh-tri":75,"oh-tri-db":75,"rope-pd":75,"curl-mach":75,"cable-curl":75,preacher:75,hammer:75,
  latraise:60,"rear-fly":60,reardelt:60,facepull:60,sapd:60,abduction:60};
 var INC={legpress:5,hipthrust:5,"lat-wide":5,"lat-neutral":5,"row-cs":5,chestpress:5,pecdeck:5,
  abduction:5,calf:5,"incl-curl":2,hammer:2,"ohp-db":2,"rear-fly":2};
 function restFor(e){return REST[e.move]||90}
 function incFor(e){return INC[e.move]||2.5}
-function blockOf(w){return w<=36?1:2}
+function blockOf(w){return w<=36?1:(w<=42?2:3)}
 function effSets(n,dl){return dl?Math.max(1,Math.round(n/2)):n}
 
 /* ================= Helfer ================= */
@@ -443,7 +474,7 @@ function buildExport(){
  .sort(function(a,b){var x=a.split(":").map(Number),y=b.split(":").map(Number);
   return x[0]-y[0]||x[1]-y[1]});
  if(!keys.length)return "Noch keine Sätze eingetragen.";
- var out=["TRAININGSLOG W31–42","==================="];
+ var out=["TRAININGSLOG W31–48","==================="];
  keys.forEach(function(k){
   var p=k.split(":").map(Number),w=p[0],dn=p[1],s=state.sessions[k];
   var day=PLAN[blockOf(w)].days[dn-1],meta=WEEK_META[w]||{};
@@ -466,7 +497,7 @@ function parseExport(text){
  lines.forEach(function(ln){
   var h=ln.trim().match(headRe);
   if(h){var w=+h[1],d=+h[2];
-   if(w<31||w>42||d<1||d>4){cur=null;return}
+   if(w<31||w>48||d<1||d>4){cur=null;return}
    key=w+":"+d;var dm=ln.match(/\[(\d{4}-\d{2}-\d{2})\]/);
    cur={entries:{},rpe:{},alt:{},note:"",back:"",date:dm?dm[1]:""};sessions[key]=cur;return}
   if(!cur||!key)return;
@@ -539,6 +570,10 @@ function lastTime(e){
  Object.keys(state.sessions).forEach(function(k){
   var p=k.split(":").map(Number),w=p[0],d=p[1];
   if(w>w0||(w===w0&&d===d0))return;
+  /* Deload-Wochen steuern keine Progression: halbes Volumen und RPE 6-7
+     sind keine Aussage ueber das Arbeitsgewicht. Nur ueberspringen,
+     solange es ueberhaupt eine Nicht-Deload-Woche gibt. */
+  if((WEEK_META[w]||{}).deload&&!(WEEK_META[w0]||{}).deload)return;
   var day=PLAN[blockOf(w)].days[d-1];if(!day)return;
   var S=state.sessions[k];
   day.items.forEach(function(it){
@@ -559,7 +594,7 @@ function render(){
  h+='<div class="head"><div class="eyebrow">Block '+blockOf(week)+' · '+esc(block.label)+'</div>'+
   '<div class="weekrow"><div class="weeknum">'+week+'</div><div class="weeklab">Woche</div>'+
   '<div class="step"><button class="stepbtn" data-a="w-" '+(week<=31?"disabled":"")+'>−</button>'+
-  '<button class="stepbtn" data-a="w+" '+(week>=42?"disabled":"")+'>+</button></div></div>';
+  '<button class="stepbtn" data-a="w+" '+(week>=48?"disabled":"")+'>+</button></div></div>';
  h+='<div class="rail">'+block.weeks.map(function(w){
   var c="seg"+(w<week?" done":"")+(w===week?" now":"")+(WEEK_META[w].deload?" dl":"");
   return '<div class="'+c+'"></div>'}).join("")+'</div>';
@@ -777,7 +812,7 @@ document.addEventListener("click",function(ev){
 
  if(a==="w-"){if(state.currentWeek>31){state.currentWeek--;saveLocal();scheduleSync();ui.cue=null;
   ui.drafts={};render()}return}
- if(a==="w+"){if(state.currentWeek<42){state.currentWeek++;saveLocal();scheduleSync();ui.cue=null;
+ if(a==="w+"){if(state.currentWeek<48){state.currentWeek++;saveLocal();scheduleSync();ui.cue=null;
   ui.drafts={};render()}return}
  if(a==="day"){ui.day=+t.getAttribute("data-d");ui.cue=null;ui.drafts={};render();
   window.scrollTo(0,0);return}
