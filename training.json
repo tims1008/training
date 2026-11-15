@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-15T07:17:30.152Z",
+ "updated": "2026-11-15T07:20:39.609Z",
  "currentWeek": 44,
  "sessions": {
   "32:2": {
@@ -4592,6 +4592,10 @@
      {
       "w": 30,
       "r": 11
+     },
+     {
+      "w": 30,
+      "r": 11
      }
     ]
    },
@@ -4599,7 +4603,8 @@
     "l1": 8,
     "l2": 8,
     "l3": 8,
-    "l4": 8
+    "l4": 8,
+    "l5": 8
    },
    "alt": {},
    "note": "Muskeln heute müde, hätte einen Tag Pause machen sollen",
