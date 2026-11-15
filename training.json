@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-14T07:57:01.248Z",
+ "updated": "2026-11-15T06:51:45.560Z",
  "currentWeek": 44,
  "sessions": {
   "32:2": {
@@ -4525,6 +4525,21 @@
    "note": "Anstrengende Einheit heute; Muskeln gefühlt weniger leistungsfähig",
    "back": "",
    "date": "2026-11-14"
+  },
+  "44:4": {
+   "entries": {
+    "l1": [
+     {
+      "w": 10,
+      "r": 15
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-11-15"
   }
  }
 }
