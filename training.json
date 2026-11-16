@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16T05:45:28.609Z",
+ "updated": "2026-11-16T08:18:24.525Z",
  "currentWeek": 45,
  "sessions": {
   "32:2": {
@@ -4610,6 +4610,21 @@
    "note": "Muskeln heute müde, hätte einen Tag Pause machen sollen",
    "back": "",
    "date": "2026-11-15"
+  },
+  "45:1": {
+   "entries": {
+    "i1": [
+     {
+      "w": 50,
+      "r": 11
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-11-16"
   }
  }
 }
