@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16T08:37:03.779Z",
+ "updated": "2026-11-16T08:52:56.633Z",
  "currentWeek": 45,
  "sessions": {
   "32:2": {
@@ -4627,12 +4627,6 @@
       "r": 10
      }
     ],
-    "i3": [
-     {
-      "w": 25,
-      "r": 10
-     }
-    ],
     "i4": [
      {
       "w": 65,
@@ -4667,7 +4661,9 @@
     "i4": 8,
     "i2": 8
    },
-   "alt": {},
+   "alt": {
+    "i3": "Glute-Kickback Maschine"
+   },
    "note": "Beine fühlten sich heute deutlich kräftiger an",
    "back": "",
    "date": "2026-11-16"
