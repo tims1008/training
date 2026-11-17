@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-17T11:43:30.676Z",
+ "updated": "2026-11-17T11:45:17.365Z",
  "currentWeek": 45,
  "sessions": {
   "32:2": {
@@ -4731,13 +4731,18 @@
      {
       "w": 17.5,
       "r": 12
+     },
+     {
+      "w": 17.5,
+      "r": 10
      }
     ]
    },
    "rpe": {
     "j1": 8,
     "j3": 8,
-    "j4": 8
+    "j4": 8,
+    "j5": 8
    },
    "alt": {},
    "note": "Triceps pushdown vor chest press gemacht",
