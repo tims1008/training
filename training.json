@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16T08:58:47.337Z",
+ "updated": "2026-11-17T11:22:42.701Z",
  "currentWeek": 45,
  "sessions": {
   "32:2": {
@@ -4682,6 +4682,21 @@
    "note": "Beine fühlten sich heute deutlich kräftiger an",
    "back": "",
    "date": "2026-11-16"
+  },
+  "45:2": {
+   "entries": {
+    "j1": [
+     {
+      "w": 20,
+      "r": 7
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-11-17"
   }
  }
 }
