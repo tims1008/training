@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-17T11:53:06.421Z",
+ "updated": "2026-11-18T10:03:43.369Z",
  "currentWeek": 45,
  "sessions": {
   "32:2": {
@@ -4763,6 +4763,21 @@
    "note": "Chest press zum schluss gemacht",
    "back": "",
    "date": "2026-11-17"
+  },
+  "45:3": {
+   "entries": {
+    "k1": [
+     {
+      "w": 55,
+      "r": 12
+     }
+    ]
+   },
+   "rpe": {},
+   "alt": {},
+   "note": "",
+   "back": "",
+   "date": "2026-11-18"
   }
  }
 }
