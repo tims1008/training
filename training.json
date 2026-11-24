@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T08:34:36.210Z",
+ "updated": "2026-11-24T08:38:06.583Z",
  "currentWeek": 46,
  "sessions": {
   "32:2": {
@@ -5143,13 +5143,18 @@
      {
       "w": 55,
       "r": 10
+     },
+     {
+      "w": 55,
+      "r": 10
      }
     ]
    },
    "rpe": {
     "k2": 8,
     "k6": 8,
-    "k3": 8
+    "k3": 8,
+    "k1": 9
    },
    "alt": {},
    "note": "Lat pulldown nach incline dumbbell curl gemacht",
