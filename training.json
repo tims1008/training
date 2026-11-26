@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-26T10:47:24.151Z",
+ "updated": "2026-11-26T10:48:44.532Z",
  "currentWeek": 47,
  "sessions": {
   "32:2": {
@@ -5333,7 +5333,9 @@
     "i5": 8,
     "i2": 8
    },
-   "alt": {},
+   "alt": {
+    "i3": "Glute-Kickback Maschine"
+   },
    "note": "",
    "back": "",
    "date": "2026-11-26"
